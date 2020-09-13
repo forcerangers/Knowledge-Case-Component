@@ -1,0 +1,40 @@
+public with sharing class KnowledgeSearcher_LCC {
+    private static final String KNOWLEDGE_CATEGORY_OBJECT = 'KnowledgeArticleVersion';    
+        @AuraEnabled
+        public static List<KnowledgeArticleVersion> getKnowledgeResults(string SearchText){
+            String SearchKey =  + SearchText + '%';
+            String sosl = null; 
+            sosl = 'FIND {' + SearchText + '} IN ALL FIELDS RETURNING KnowledgeArticleVersion(ArticleNumber,KnowledgeArticleId,LastPublishedDate,Title,ValidationStatus)';
+            Search.SearchResults searchResults = Search.find(sosl);
+            system.debug('searchResults'+searchResults);
+            List<Search.SearchResult> articlelist = searchResults.get(KNOWLEDGE_CATEGORY_OBJECT);
+            List<KnowledgeArticleVersion> articles = new List<KnowledgeArticleVersion>();
+            for (Search.SearchResult searchResult : articleList) {
+                KnowledgeArticleVersion article = (KnowledgeArticleVersion) searchResult.getSObject();
+                articles.add(article);
+            }
+            system.debug('articles'+articles);
+            return articles;
+        }
+    
+    @AuraEnabled
+    public static List<KnowledgeArticleVersion> search(string SubjectValue) {
+        
+        system.debug('SubjectValue'+SubjectValue);
+        String sosl= null;
+        if(SubjectValue.length()>1){
+            sosl = 'FIND {' + SubjectValue + '} IN ALL FIELDS RETURNING KnowledgeArticleVersion(ArticleNumber,KnowledgeArticleId,LastPublishedDate,Title,ValidationStatus)';
+        }  
+        // do search
+        Search.SearchResults searchResults = Search.find(sosl);
+        system.debug('searchResults'+searchResults);
+        List<Search.SearchResult> articlelist = searchResults.get(KNOWLEDGE_CATEGORY_OBJECT);
+        List<KnowledgeArticleVersion> articles = new List<KnowledgeArticleVersion>();
+        for (Search.SearchResult searchResult : articleList) {
+            KnowledgeArticleVersion article = (KnowledgeArticleVersion) searchResult.getSObject();
+            articles.add(article);
+        }
+        system.debug('articles'+articles);
+        return articles;
+    }
+}
