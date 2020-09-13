@@ -1,0 +1,63 @@
+<aura:component  controller="CustomCaseController"
+                implements="flexipage:availableForAllPageTypes,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:appHostable">
+    <ltng:require styles="/resource/SLDS_Stylesheet/assets/styles/salesforce-lightning-design-system-ltng.css" />
+    
+    <aura:attribute name="cases" type="Case[]"/>
+    <aura:attribute name="newCase" type="Case"
+                    default="{ 'sobjectType': 'Case',
+                             'Subject': '',
+                             'Origin': '',
+                             'Status': '',
+                             'Contact': ''
+                             }"/>
+    
+    <!-- Start -Application Event to communicate with knowledge widget-->
+    <aura:registerEvent name="evtknowledge" type="c:knowledgeWidgetEvent"/>
+    <!--End Application Event to communicate with knowledge widget-->
+    
+    <!-- Input Form using components -->
+    
+    <div class="container">
+        <form class="slds-form--stacked">
+            <div class="slds-form-element slds-is-required">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="subject" label="Subject"
+                                      onchange="{!c.keychange}" 
+                                     value="{!v.newCase.Subject}"
+                                     required="true"/>
+                </div>
+            </div>
+            <div class="slds-form-element slds-is-required">
+                <div class="slds-form-element__control">
+                     <lightning:input aura:id="origin" label="Origin"
+                                      onchange="{!c.keychange}" 
+                                     value="{!v.newCase.Origin}"
+                                      required="true"/>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="status" label="Status"
+                                      onchange="{!c.keychange}" 
+                                     value="{!v.newCase.Status}"
+                                      required="true"/>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <lightning:input aura:id="contact" label="Contact Name"
+                                      onchange="{!c.keychange}" 
+                                     value="{!v.newCase.Contact}"
+                                      required="true"/>
+                    	
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <ui:button label="Submit" 
+                           class="slds-button slds-button--neutral"
+                           labelClass="label"
+                           press="{!c.createCase}"/>
+            </div>
+        </form>
+    </div>
+</aura:component>
