@@ -1,0 +1,85 @@
+<aura:component description="Knowledge Searcher Component" implements="flexipage:availableForAllPageTypes,force:hasRecordId" controller="KnowledgeSearcher_LCC">
+    <aura:attribute name="articles" type="Object[]" access="PRIVATE" />
+    <aura:attribute name="article" type="boolean" default="false" />
+    <aura:attribute name="Subject" type="String"/>
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    <aura:attribute name="searchRecords" type="List"/>
+    <aura:attribute name="selectRecordName" type="String"/>
+    <aura:attribute name="LoadingText" type="boolean" default="true"/>
+    
+    
+    <!--Start Handler Application Event -->
+    <aura:handler event="c:knowledgeWidgetEvent" action="{!c.handleApplicationEvent}"/>
+    <!--End Handler Application Event -->
+    
+    <lightning:card class="slds-card_boundary">
+        <div class="slds-p-horizontal_small">
+            <h2 class="title slds-m-bottom_small"><span class="slds-text-heading_small slds-truncate" title="Knowledge">Knowledge</span></h2>
+            
+            <div class="slds-grid slds-m-bottom_small">
+                <div class="slds-size--10-of-12">
+                    <div class="slds-combobox_container">
+                        <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aura:id="resultBox" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon slds-input-has-icon_left-right" role="none">
+                                <div class="slds-col">
+                                    <lightning:input aura:id="userinput" class="slds-m-right_small" name="Search" onchange="{!c.SearchKnowledge}" value="{!v.selectRecordName}" placeholder="Search Knowledge"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Second part display result -->
+                            <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid slds-dropdown_custom" role="listbox">
+                                <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                                    <aura:iteration items="{!v.searchRecords}" var="serecord" indexVar="hdtv">
+                                        <li role="presentation" class="slds-listbox__item">
+                                            
+                                            <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option">
+                                                <span class="slds-media__figure">
+                                                    <span class="slds-icon_container slds-icon-standard-account">
+                                                        <lightning:icon iconName="standard:knowledge"  size="medium"/>
+                                                    </span>
+                                                </span>
+                                                <span class="slds-media__body">
+                                                    <a href="javascript:void" data-value="{!serecord.Id}" onclick="{!c.navigate}" >{!serecord.Title}</a>
+                                                    
+                                                    <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{!serecord.ArticleNumber}</span>
+                                                </span>
+                                            </div>
+                                        </li>
+                                    </aura:iteration>
+                                    <aura:if isTrue="{!and(v.searchRecords.length == 0 , !v.LoadingText)}">
+                                        <p style="font-size: 13px;font-family: monospace;margin-left: 36%;">No Result found.</p>
+                                    </aura:if>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size--2-of-12" style="margin-top: 18px;">
+                    <lightning:buttonMenu iconName="utility:sort" alternativeText="Sort options" class="slds-float_right" menuAlignment="right">
+                        <lightning:menuItem label="Relevance" value="relevance" />
+                        <lightning:menuItem label="Ascending" value="ascending" />
+                        <lightning:menuItem label="Descending" value="descending" />
+                    </lightning:buttonMenu>
+                </div>
+            </div>
+            
+            <aura:if isTrue="{!v.article}">
+                <div class="slds-text-body_small slds-m-bottom_small">
+                    Suggested Articles
+                    <ul class="slds-list--horizontal slds-wrap slds-has-dividers_right">
+                        <li class="slds-item">{!v.articles.length} results</li>
+                        <li class="slds-item">Sorted by Relevance</li>
+                    </ul>
+                </div>
+                <ul class="slds-has-dividers_bottom">
+                    <aura:iteration items="{!v.articles}" var="a">
+                        <c:KnowledgeSearcherResult article="{!a}" /> 
+                    </aura:iteration>
+                </ul>
+                <aura:set attribute="else">
+                    No articles found.
+                </aura:set>
+            </aura:if>
+        </div>
+    </lightning:card>
+</aura:component>
