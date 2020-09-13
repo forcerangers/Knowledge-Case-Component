@@ -1,0 +1,112 @@
+<aura:component description="KnowledgeSearcherResult">
+    <aura:attribute name="article" type="object" access="public" />
+    <aura:attribute name="articleDetails" type="boolean" default="false" />
+    <aura:attribute name="KnowledgeId" type="string"  />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:attribute name="activeSections" type="List" default="[]" />
+    
+    <li class="slds-item slds-p-vertical--x-small">
+        <div class="slds-tile">
+            <div class="slds-grid">
+                <div class="slds-size--5-of-6 slds-truncate" title="{!v.article.Title}">
+                    <a href="javascript:void" onmouseover="{!c.handleMouseOver}" data-value="{!v.article.Id}" onclick="{!c.navigate}">{!v.article.Title}</a>
+                </div>
+                <div class="slds-size--1-of-6">
+                    <lightning:buttonMenu iconName="utility:down" alternativeText="Knowledge Article Actions" class="slds-float_right" menuAlignment="right" iconSize="x-small">
+                        <lightning:menuItem label="Attach to Case" value="attach" />
+                        <lightning:menuItem label="Open" value="open" />
+                    </lightning:buttonMenu>
+                </div>
+            </div>
+            <div class="slds-tile__detail slds-text-body_small">
+                <ul class="slds-list--horizontal slds-wrap slds-has-dividers_right">
+                    <li class="slds-item">{!v.article.ArticleNumber}</li>
+                    <li class="slds-item">{!v.article.ValidationStatus}</li>
+                    <li class="slds-item"><lightning:formattedDateTime value="{!v.article.LastPublishedDate}" year="numeric" month="numeric" day="numeric"  hour="2-digit" minute="2-digit" /></li>
+                </ul>
+            </div>
+        </div>
+    </li>
+    <aura:if isTrue="{!v.articleDetails}">
+        <div class="slds-popover slds-nubbin_right" style="right: 101%;top: 1%;">
+            <lightning:card>  
+                <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon" style="float: right;" onclick="{!c.CloseDetails}">
+                    <lightning:icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" iconName="utility:clear" size="x-small" alternativeText="icon" />
+                </button>
+                <lightning:recordViewForm recordId="{!v.KnowledgeId}" 
+                                          objectApiName="Knowledge__kav">
+                    
+                    <div class="slds-page-header">
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-12">
+                                <lightning:icon iconName="standard:knowledge" alternativeText="knowledge" title="knowledge" />
+                            </div>
+                            <div class="slds-col slds-size_11-of-12">
+                                <p  class="slds-text-heading--label"> <lightning:outputField fieldName="Title" class="slds-heading-none"/></p>
+                            </div>
+                        </div>
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning:outputField fieldName="RecordTypeId" />
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning:outputField fieldName="ArticleNumber" />
+                            </div>   
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning:outputField fieldName="PublishStatus" />
+                            </div>
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning:outputField fieldName="LastModifiedDate" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slds-card slds-crd">
+                        <lightning:accordion allowMultipleSectionsOpen="true" activeSectionName="{!v.activeSections}">
+                            <lightning:accordionSection name="A" label="Information">
+                                <aura:set attribute="body">
+                                    <lightning:outputField fieldName="Title"/>
+                                    <lightning:outputField fieldName="UrlName" />
+                                </aura:set>
+                            </lightning:accordionSection>
+                            <lightning:accordionSection name="B" label="Article Details">
+                                <aura:set attribute="body">
+                                    <lightning:outputField fieldName="Question__c" />
+                                    <lightning:outputField fieldName="Answer__c" />
+                                </aura:set>
+                            </lightning:accordionSection>
+                            <lightning:accordionSection name="C" label="Properties">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="ArticleCreatedDate" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="IsVisibleInApp" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="CreatedById" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="IsVisibleInCsp" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="LastModifiedById" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="IsVisibleInPrm" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName=" LastPublishedDate" />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning:outputField fieldName="IsVisibleInPkb" />
+                                    </div>
+                                </div>
+                            </lightning:accordionSection>
+                        </lightning:accordion>
+                    </div>
+                </lightning:recordViewForm>
+            </lightning:card>
+        </div>
+    </aura:if>
+</aura:component>
