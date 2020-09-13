@@ -1,0 +1,11 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride"
+                access="global" >
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_2-of-3">
+            <c:CustomCaseCreation/>  
+        </div>
+        <div class="slds-col slds-size_1-of-3">
+            <c:KnowledgeSearcher/>
+        </div>
+    </div>
+</aura:component>
